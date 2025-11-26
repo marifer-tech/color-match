@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Match Reflex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ========= RESET BÁSICO ========= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f4f4f7;
+            color: #222;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        /* ========= LAYOUT DA APLICAÇÃO ========= */
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 620px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+            padding: 24px 20px 28px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .app-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .app-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* ========= TELAS ========= */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* ========= BOTÕES GENÉRICOS ========= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: #222;
+            color: #fefefe;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f1f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e2ec;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #555;
+        }
+
+        .btn-ghost:hover {
+            background: #f2f2f7;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        .btn + .btn {
+            margin-left: 8px;
+        }
+
+        /* ========= TELA INICIAL ========= */
+        .screen-start {
+            justify-content: space-between;
+        }
+
+        .start-hero {
+            margin-top: 12px;
+            margin-bottom: 24px;
+            padding: 16px 16px 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #202124, #343641);
+            color: #fefefe;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .start-hero-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .start-hero-text {
+            font-size: 0.86rem;
+            line-height: 1.4;
+            color: #d4d4e0;
+        }
+
+        .start-hero-tag {
+            display: inline-flex;
+            align-items: center;
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .start-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .start-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .start-footer {
+            font-size: 0.78rem;
+            color: #888;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* ========= TELA DE INSTRUÇÕES BÁSICAS ========= */
+        .howto {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: #f7f7fb;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #444;
+        }
+
+        .howto-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .howto-example {
+            margin-top: 8px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px dashed #ddd;
+            display: inline-block;
+        }
+
+        .howto-example-word {
+            font-weight: 700;
+        }
+
+        /* ========= TELA DE JOGO ========= */
+        .screen-game {
+            justify-content: space-between;
+        }
+
+        .game-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #f1f1f7;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill-label {
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            font-size: 0.7rem;
+            color: #777;
+        }
+
+        .pill-value {
+            font-weight: 700;
+        }
+
+        .pill.timer-warning {
+            background: #fff1e0;
+            color: #b9531a;
+        }
+
+        .pill.timer-danger {
+            background: #ffe6e6;
+            color: #b3261e;
+        }
+
+        .btn-pause {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+
+        .game-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .stimulus-box {
+            padding: 12px 16px;
+            border-radius: 18px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+            min-width: 70%;
+            text-align: center;
+        }
+
+        .stimulus-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .stimulus-word {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .color-btn {
+            border-radius: 24px;
+            min-height: 96px;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+            transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.1s ease;
+        }
+
+        .color-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+        }
+
+        .color-btn.disabled {
+            opacity: 0.4;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .color-btn.red    { background: #e53935; }
+        .color-btn.blue   { background: #1e88e5; }
+        .color-btn.green  { background: #43a047; }
+        .color-btn.yellow { background: #f9a825; color: #222; }
+
+        .game-feedback {
+            margin-top: 16px;
+            min-height: 22px;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .game-feedback.ok {
+            color: #2e7d32;
+        }
+
+        .game-feedback.error {
+            color: #c62828;
+        }
+
+        .game-feedback.info {
+            color: #666;
+        }
+
+        .flash-correct {
+            animation: flashCorrect 180ms ease-out;
+        }
+
+        .flash-wrong {
+            animation: flashWrong 180ms ease-out;
+        }
+
+        @keyframes flashCorrect {
+            0% { background-color: #ffffff; }
+            30% { background-color: #e3f6e8; }
+            100% { background-color: #ffffff; }
+        }
+
+        @keyframes flashWrong {
+            0% { background-color: #ffffff; }
+            30% { background-color: #ffe5e5; }
+            100% { background-color: #ffffff; }
+        }
+
+        .game-bottom-hint {
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* ========= TELA FINAL ========= */
+        .screen-end {
+            justify-content: space-between;
+        }
+
+        .end-summary {
+            margin-top: 16px;
+            padding: 18px 16px;
+            border-radius: 18px;
+            background: #f7f7fb;
+        }
+
+        .end-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .end-score-main {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .end-score-label {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .end-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.84rem;
+        }
+
+        .end-stat-box {
+            background: #ffffff;
+            padding: 8px 10px;
+            border-radius: 12px;
+            border: 1px solid #e1e1f0;
+        }
+
+        .end-stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .end-stat-value {
+            font-weight: 600;
+        }
+
+        .end-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .end-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .end-footer {
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: #999;
+            text-align: center;
+        }
+
+        /* ========= ESTADO DE PAUSA ========= */
+        .paused-banner {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            font-size: 0.82rem;
+            color: #856404;
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .app {
+                border-radius: 20px;
+            }
+
+            .stimulus-word {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header class="app-header">
+        <div class="app-title">Color Match Reflex</div>
+        <div class="app-subtitle">Mini game de atenção visual e controle cognitivo</div>
+    </header>
+
+    <!-- ========== TELA INICIAL ========== -->
+    <section id="screen-start" class="screen screen-start active">
+        <div>
+            <div class="start-hero">
+                <div class="start-hero-tag">Efeito Stroop</div>
+                <div class="start-hero-title">
+                    Clique na cor certa, não na cor que você vê.
+                </div>
+                <p class="start-hero-text">
+                    A palavra mostra uma cor, mas está pintada com outra.
+                    Seu desafio é escolher <strong>o botão da cor escrita</strong>, ignorando o estímulo visual.
+                </p>
+            </div>
+
+            <div class="howto">
+                <div class="howto-title">Como funciona?</div>
+                <p>
+                    1. Uma palavra de cor aparece no centro da tela.<br>
+                    2. Você deve clicar no botão cuja <strong>cor escrita</strong> corresponde à palavra.<br>
+                    3. O tempo vai diminuindo e a dificuldade aumenta.
+                </p>
+                <div class="howto-example">
+                    Exemplo: a palavra
+                    <span class="howto-example-word" style="color:#e53935;">AZUL</span>
+                    aparece em vermelho. A resposta correta é o botão <strong>AZUL</strong>.
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="start-actions">
+                <button id="btnStartGame" class="btn btn-primary">Iniciar jogo</button>
+                <button id="btnStartPractice" class="btn btn-secondary">
+                    Modo treino (mais lento)
+                </button>
+            </div>
+
+            <div class="start-footer">
+                Fluxo para prints: Tela inicial → Tela de jogo → Tela de resultado.
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TELA DE JOGO ========== -->
+    <section id="screen-game" class="screen screen-game">
+        <div>
+            <div class="game-topbar">
+                <div class="pill" id="scorePill">
+                    <span class="pill-label">Pontos</span>
+                    <span class="pill-value" id="scoreValue">0</span>
+                </div>
+
+                <div class="pill" id="timerPill">
+                    <span class="pill-label">Tempo</span>
+                    <span class="pill-value" id="timerValue">30s</span>
+                </div>
+
+                <button id="btnPause" class="btn btn-ghost btn-pause">Pausar</button>
+            </div>
+
+            <div id="pausedBanner" class="paused-banner" style="display:none;">
+                Jogo pausado. Clique em "Retomar" para continuar.
+            </div>
+        </div>
+
+        <div class="game-main" id="gameArea">
+            <div class="stimulus-box">
+                <div class="stimulus-label">Cor escrita (ignore a cor visual)</div>
+                <div id="stimulusWord" class="stimulus-word">
+                    <!-- Palavra do estímulo -->
+                </div>
+            </div>
+
+            <div class="color-grid">
+                <button class="color-btn red" data-color="VERMELHO">Vermelho</button>
+                <button class="color-btn blue" data-color="AZUL">Azul</button>
+                <button class="color-btn green" data-color="VERDE">Verde</button>
+                <button class="color-btn yellow" data-color="AMARELO">Amarelo</button>
+            </div>
+
+            <div id="gameFeedback" class="game-feedback info">
+                Clique na cor escrita pela palavra.
+            </div>
+
+            <div class="game-bottom-hint">
+                Dica para o relatório: botões em grade 2×2 com posições fixas e feedback imediato.
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TELA FINAL ========== -->
+    <section id="screen-end" class="screen screen-end">
+        <div class="end-summary">
+            <div class="end-title">Fim de jogo!</div>
+            <div id="finalScore" class="end-score-main">0</div>
+            <div class="end-score-label">Pontuação total</div>
+
+            <div class="end-stats">
+                <div class="end-stat-box">
+                    <div class="end-stat-label">Rodadas jogadas</div>
+                    <div id="statRounds" class="end-stat-value">0</div>
+                </div>
+                <div class="end-stat-box">
+                    <div class="end-stat-label">Acertos</div>
+                    <div id="statHits" class="end-stat-value">0</div>
+                </div>
+                <div class="end-stat-box">
+                    <div class="end-stat-label">Erros</div>
+                    <div id="statMiss" class="end-stat-value">0</div>
+                </div>
+                <div class="end-stat-box">
+                    <div class="end-stat-label">Tempo médio</div>
+                    <div id="statAvgTime" class="end-stat-value">0.0s</div>
+                </div>
+            </div>
+
+            <div class="end-actions">
+                <button id="btnPlayAgain" class="btn btn-primary">Jogar novamente</button>
+                <button id="btnBackHome" class="btn btn-secondary">Voltar à tela inicial</button>
+            </div>
+        </div>
+
+        <div class="end-footer">
+            Tela de resultados/feedback pronta para printar no relatório.
+        </div>
+    </section>
+</div>
+
+<script>
+    // =============================
+    // CONFIGURAÇÕES E ESTADO
+    // =============================
+    const SCREENS = {
+        start: document.getElementById('screen-start'),
+        game: document.getElementById('screen-game'),
+        end: document.getElementById('screen-end'),
+    };
+
+    const COLORS = [
+        { name: 'VERMELHO', visualClass: 'red',    cssColor: '#e53935' },
+        { name: 'AZUL',     visualClass: 'blue',   cssColor: '#1e88e5' },
+        { name: 'VERDE',    visualClass: 'green',  cssColor: '#43a047' },
+        { name: 'AMARELO',  visualClass: 'yellow', cssColor: '#f9a825' }
+    ];
+
+    const stimulusWordEl = document.getElementById('stimulusWord');
+    const scoreValueEl   = document.getElementById('scoreValue');
+    const timerValueEl   = document.getElementById('timerValue');
+    const timerPillEl    = document.getElementById('timerPill');
+    const gameFeedbackEl = document.getElementById('gameFeedback');
+    const gameAreaEl     = document.getElementById('gameArea');
+    const pausedBannerEl = document.getElementById('pausedBanner');
+
+    const finalScoreEl   = document.getElementById('finalScore');
+    const statRoundsEl   = document.getElementById('statRounds');
+    const statHitsEl     = document.getElementById('statHits');
+    const statMissEl     = document.getElementById('statMiss');
+    const statAvgTimeEl  = document.getElementById('statAvgTime');
+
+    const colorButtons   = document.querySelectorAll('.color-btn');
+
+    const btnStartGame      = document.getElementById('btnStartGame');
+    const btnStartPractice  = document.getElementById('btnStartPractice');
+    const btnPause          = document.getElementById('btnPause');
+    const btnPlayAgain      = document.getElementById('btnPlayAgain');
+    const btnBackHome       = document.getElementById('btnBackHome');
+
+    let score = 0;
+    let baseTime = 30;       // tempo inicial em segundos
+    let timeLeft = baseTime;
+    let timerId = null;
+    let paused = false;
+
+    let currentTargetColor = null; // string: 'VERMELHO', etc
+    let roundStartTime = null;
+
+    let totalRounds = 0;
+    let totalHits   = 0;
+    let totalMiss   = 0;
+    let totalReactionTime = 0; // soma das reações corretas
+
+    let difficultyMode = 'normal'; // 'normal' ou 'practice'
+
+    // =============================
+    // FUNÇÕES DE NAVEGAÇÃO DE TELAS
+    // =============================
+    function showScreen(name) {
+        Object.values(SCREENS).forEach(s => s.classList.remove('active'));
+        SCREENS[name].classList.add('active');
+    }
+
+    // =============================
+    // LÓGICA DO JOGO
+    // =============================
+    function resetGameState() {
+        score = 0;
+        timeLeft = baseTime;
+        paused = false;
+        currentTargetColor = null;
+        totalRounds = 0;
+        totalHits   = 0;
+        totalMiss   = 0;
+        totalReactionTime = 0;
+
+        scoreValueEl.textContent = '0';
+        updateTimerDisplay();
+        setFeedback('Clique na cor escrita pela palavra.', 'info');
+        pausedBannerEl.style.display = 'none';
+        btnPause.textContent = 'Pausar';
+        timerPillEl.classList.remove('timer-warning', 'timer-danger');
+    }
+
+    function startGame(mode = 'normal') {
+        difficultyMode = mode;
+        resetGameState();
+        showScreen('game');
+        enableColorButtons(true);
+        startTimer();
+        nextRound();
+    }
+
+    function startTimer() {
+        clearInterval(timerId);
+        timerId = setInterval(() => {
+            if (paused) return;
+
+            timeLeft -= 1;
+            if (timeLeft < 0) {
+                timeLeft = 0;
+            }
+            updateTimerDisplay();
+
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        timerValueEl.textContent = timeLeft + 's';
+
+        timerPillEl.classList.remove('timer-warning', 'timer-danger');
+        if (timeLeft <= 5) {
+            timerPillEl.classList.add('timer-danger');
+        } else if (timeLeft <= 10) {
+            timerPillEl.classList.add('timer-warning');
+        }
+    }
+
+    function nextRound() {
+        totalRounds++;
+        // escolhe uma cor para SER A RESPOSTA
+        const target = COLORS[Math.floor(Math.random() * COLORS.length)];
+        currentTargetColor = target.name;
+
+        // escolhe uma cor visual diferente para o texto
+        let visualColor = target;
+        while (visualColor.name === target.name) {
+            visualColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+        }
+
+        stimulusWordEl.textContent = target.name;
+        stimulusWordEl.style.color = visualColor.cssColor;
+
+        roundStartTime = performance.now();
+    }
+
+    function enableColorButtons(enable) {
+        colorButtons.forEach(btn => {
+            if (enable) {
+                btn.classList.remove('disabled');
+                btn.disabled = false;
+            } else {
+                btn.classList.add('disabled');
+                btn.disabled = true;
+            }
+        });
+    }
+
+    function setFeedback(message, type) {
+        gameFeedbackEl.textContent = message;
+        gameFeedbackEl.classList.remove('ok', 'error', 'info');
+        gameFeedbackEl.classList.add(type);
+    }
+
+    function handleColorClick(selectedName) {
+        if (paused || timeLeft <= 0) return;
+
+        const now = performance.now();
+        const reactionSeconds = (now - roundStartTime) / 1000;
+
+        const correct = selectedName === currentTargetColor;
+
+        if (correct) {
+            totalHits++;
+            score += 10;
+
+            // pequena recompensa de tempo no modo normal, menor no treino
+            const bonus = (difficultyMode === 'practice') ? 0.3 : 0.6;
+            timeLeft += bonus;
+            timeLeft = Math.min(timeLeft, baseTime + 10); // limite
+
+            totalReactionTime += reactionSeconds;
+            scoreValueEl.textContent = score.toString();
+            updateTimerDisplay();
+
+            setFeedback('Acertou! Continue.', 'ok');
+            flashArea(true);
+        } else {
+            totalMiss++;
+            // perde um pouco de tempo
+            const penalty = (difficultyMode === 'practice') ? 1 : 2;
+            timeLeft -= penalty;
+            if (timeLeft < 0) timeLeft = 0;
+            updateTimerDisplay();
+
+            setFeedback('Errou! Foque na palavra, não na cor.', 'error');
+            flashArea(false);
+        }
+
+        if (timeLeft <= 0) {
+            endGame();
+        } else {
+            // pequena pausa lógica se quiser capturar prints da mesma tela
+            setTimeout(nextRound, 250);
+        }
+    }
+
+    function flashArea(correct) {
+        const cls = correct ? 'flash-correct' : 'flash-wrong';
+        gameAreaEl.classList.remove('flash-correct', 'flash-wrong');
+        void gameAreaEl.offsetWidth; // força reflow
+        gameAreaEl.classList.add(cls);
+    }
+
+    function togglePause() {
+        if (timeLeft <= 0) return;
+
+        paused = !paused;
+        if (paused) {
+            pausedBannerEl.style.display = 'block';
+            btnPause.textContent = 'Retomar';
+            setFeedback('Jogo pausado.', 'info');
+            enableColorButtons(false);
+        } else {
+            pausedBannerEl.style.display = 'none';
+            btnPause.textContent = 'Pausar';
+            setFeedback('Clique na cor escrita pela palavra.', 'info');
+            enableColorButtons(true);
+            roundStartTime = performance.now(); // reinicia contagem da reação
+        }
+    }
+
+    function endGame() {
+        clearInterval(timerId);
+        enableColorButtons(false);
+        timeLeft = 0;
+        updateTimerDisplay();
+
+        // calcula tempo médio de reação
+        let avgReaction = 0;
+        if (totalHits > 0) {
+            avgReaction = totalReactionTime / totalHits;
+        }
+
+        finalScoreEl.textContent = score.toString();
+        statRoundsEl.textContent = totalRounds.toString();
+        statHitsEl.textContent   = totalHits.toString();
+        statMissEl.textContent   = totalMiss.toString();
+        statAvgTimeEl.textContent = avgReaction.toFixed(2) + 's';
+
+        showScreen('end');
+    }
+
+    // =============================
+    // EVENTOS
+    // =============================
+    btnStartGame.addEventListener('click', () => {
+        baseTime = 30; // modo normal
+        startGame('normal');
+    });
+
+    btnStartPractice.addEventListener('click', () => {
+        baseTime = 40; // mais tempo para treino
+        startGame('practice');
+    });
+
+    colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const selected = btn.getAttribute('data-color');
+            handleColorClick(selected);
+        });
+    });
+
+    btnPause.addEventListener('click', () => {
+        togglePause();
+    });
+
+    btnPlayAgain.addEventListener('click', () => {
+        startGame('normal');
+    });
+
+    btnBackHome.addEventListener('click', () => {
+        clearInterval(timerId);
+        showScreen('start');
+    });
+
+    // Atalho com espaço para alternar pausa (opcional)
+    document.addEventListener('keydown', (ev) => {
+        if (SCREENS.game.classList.contains('active') && ev.code === 'Space') {
+            ev.preventDefault();
+            togglePause();
+        }
+    });
+</script>
+</body>
+</html>
