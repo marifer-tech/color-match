@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Color Match Reflex</title>
+    <title>Color Match Reflex - Acessível para Daltonismo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* ========= RESET BÁSICO ========= */
@@ -30,7 +30,7 @@
         /* ========= LAYOUT DA APLICAÇÃO ========= */
         .app {
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             min-height: 620px;
             background: #ffffff;
             border-radius: 24px;
@@ -164,6 +164,56 @@
             text-transform: uppercase;
         }
 
+        .accessibility-options {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            background: #f0f9ff;
+            border: 2px solid #e0f2fe;
+        }
+
+        .accessibility-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accessibility-title svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .accessibility-option {
+            margin-top: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .option-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0369a1;
+        }
+
+        .option-desc {
+            font-size: 0.78rem;
+            color: #666;
+            margin-left: 26px;
+            line-height: 1.4;
+        }
+
         .start-actions {
             display: flex;
             flex-direction: column;
@@ -261,6 +311,16 @@
             padding: 6px 12px;
         }
 
+        .accessibility-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            font-size: 0.7rem;
+            color: #0369a1;
+            margin-top: 4px;
+        }
+
         .game-main {
             flex: 1;
             display: flex;
@@ -277,6 +337,7 @@
             background: #fafafa;
             min-width: 70%;
             text-align: center;
+            position: relative;
         }
 
         .stimulus-label {
@@ -292,18 +353,54 @@
             font-weight: 800;
         }
 
+        /* Padrões para daltonismo */
+        .pattern-stripes {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 5px,
+                rgba(0,0,0,0.1) 5px,
+                rgba(0,0,0,0.1) 10px
+            );
+        }
+
+        .pattern-dots {
+            background-image: radial-gradient(circle at 25% 25%, rgba(0,0,0,0.2) 2px, transparent 2px),
+                              radial-gradient(circle at 75% 75%, rgba(0,0,0,0.2) 2px, transparent 2px);
+            background-size: 15px 15px;
+        }
+
+        .pattern-lines {
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(0,0,0,0.15) 3px,
+                rgba(0,0,0,0.15) 6px
+            );
+        }
+
+        .pattern-checker {
+            background-image: 
+                linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(0,0,0,0.1) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.1) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.1) 75%);
+            background-size: 10px 10px;
+        }
+
         .color-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 16px;
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
         }
 
         .color-btn {
             border-radius: 24px;
-            min-height: 96px;
+            min-height: 100px;
             border: none;
             cursor: pointer;
             color: #ffffff;
@@ -313,6 +410,14 @@
             text-transform: uppercase;
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
             transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.1s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 16px 12px;
         }
 
         .color-btn:active {
@@ -326,10 +431,51 @@
             box-shadow: none;
         }
 
-        .color-btn.red    { background: #e53935; }
-        .color-btn.blue   { background: #1e88e5; }
-        .color-btn.green  { background: #43a047; }
-        .color-btn.yellow { background: #f9a825; color: #222; }
+        /* Cores originais + símbolos para daltonismo */
+        .color-btn.red {
+            background: #e53935;
+            border: 3px solid #b71c1c;
+        }
+        .color-btn.blue {
+            background: #1e88e5;
+            border: 3px solid #0d47a1;
+        }
+        .color-btn.green {
+            background: #43a047;
+            border: 3px solid #1b5e20;
+        }
+        .color-btn.yellow {
+            background: #f9a825;
+            color: #222;
+            border: 3px solid #f57f17;
+        }
+
+        .color-symbol {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-name {
+            font-size: 0.95rem;
+        }
+
+        .accessibility-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
         .game-feedback {
             margin-top: 16px;
@@ -468,6 +614,26 @@
             margin-top: 6px;
         }
 
+        /* ========= MODO ALTO CONTRASTE ========= */
+        .high-contrast .color-btn {
+            border-width: 4px;
+            font-weight: 800;
+        }
+
+        .high-contrast .stimulus-word {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .high-contrast .game-feedback.ok {
+            color: #006400;
+            font-weight: 700;
+        }
+
+        .high-contrast .game-feedback.error {
+            color: #8b0000;
+            font-weight: 700;
+        }
+
         @media (max-width: 480px) {
             .app {
                 border-radius: 20px;
@@ -476,6 +642,15 @@
             .stimulus-word {
                 font-size: 2.4rem;
             }
+
+            .color-btn {
+                min-height: 90px;
+                padding: 12px 8px;
+            }
+
+            .color-symbol {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -483,34 +658,69 @@
 <div class="app">
     <header class="app-header">
         <div class="app-title">Color Match Reflex</div>
-        <div class="app-subtitle">Mini game de atenção visual e controle cognitivo</div>
+        <div class="app-subtitle">Acessível para daltonismo • Efeito Stroop</div>
     </header>
 
     <!-- ========== TELA INICIAL ========== -->
     <section id="screen-start" class="screen screen-start active">
         <div>
             <div class="start-hero">
-                <div class="start-hero-tag">Efeito Stroop</div>
+                <div class="start-hero-tag">Acessível para Daltonismo</div>
                 <div class="start-hero-title">
                     Clique na cor certa, não na cor que você vê.
                 </div>
                 <p class="start-hero-text">
                     A palavra mostra uma cor, mas está pintada com outra.
-                    Seu desafio é escolher <strong>o botão da cor escrita</strong>, ignorando o estímulo visual.
+                    Para ajudar pessoas com daltonismo, cada cor tem um símbolo único e padrões visuais.
                 </p>
+            </div>
+
+            <div class="accessibility-options">
+                <div class="accessibility-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                        <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
+                        <circle cx="12" cy="12" r="1"/>
+                    </svg>
+                    Configurações de Acessibilidade
+                </div>
+                
+                <div class="accessibility-option">
+                    <label class="option-label">
+                        <input type="checkbox" id="toggleSymbols" checked>
+                        Mostrar símbolos nas cores (🔺, ●, ■, ★)
+                    </label>
+                    <div class="option-desc">Símbolos únicos para cada cor ajudam na identificação.</div>
+                </div>
+                
+                <div class="accessibility-option">
+                    <label class="option-label">
+                        <input type="checkbox" id="togglePatterns">
+                        Adicionar padrões visuais às cores
+                    </label>
+                    <div class="option-desc">Padrões diferentes para cada cor facilitam a distinção.</div>
+                </div>
+                
+                <div class="accessibility-option">
+                    <label class="option-label">
+                        <input type="checkbox" id="toggleHighContrast">
+                        Modo alto contraste
+                    </label>
+                    <div class="option-desc">Bordas mais espessas e cores mais saturadas.</div>
+                </div>
             </div>
 
             <div class="howto">
                 <div class="howto-title">Como funciona?</div>
                 <p>
                     1. Uma palavra de cor aparece no centro da tela.<br>
-                    2. Você deve clicar no botão cuja <strong>cor escrita</strong> corresponde à palavra.<br>
-                    3. O tempo vai diminuindo e a dificuldade aumenta.
+                    2. Use o símbolo ou padrão para identificar a cor correta.<br>
+                    3. Clique no botão correspondente à palavra escrita.
                 </p>
                 <div class="howto-example">
                     Exemplo: a palavra
                     <span class="howto-example-word" style="color:#e53935;">AZUL</span>
-                    aparece em vermelho. A resposta correta é o botão <strong>AZUL</strong>.
+                    aparece em vermelho. Procure o símbolo ● e clique no botão <strong>AZUL</strong>.
                 </div>
             </div>
         </div>
@@ -524,7 +734,7 @@
             </div>
 
             <div class="start-footer">
-                Fluxo para prints: Tela inicial → Tela de jogo → Tela de resultado.
+                Jogo acessível para todos os tipos de daltonismo • Use símbolos e padrões para identificar cores
             </div>
         </div>
     </section>
@@ -546,6 +756,10 @@
                 <button id="btnPause" class="btn btn-ghost btn-pause">Pausar</button>
             </div>
 
+            <div class="accessibility-badge">
+                ♿ Acessível: Use símbolos para identificar cores
+            </div>
+
             <div id="pausedBanner" class="paused-banner" style="display:none;">
                 Jogo pausado. Clique em "Retomar" para continuar.
             </div>
@@ -559,19 +773,16 @@
                 </div>
             </div>
 
-            <div class="color-grid">
-                <button class="color-btn red" data-color="VERMELHO">Vermelho</button>
-                <button class="color-btn blue" data-color="AZUL">Azul</button>
-                <button class="color-btn green" data-color="VERDE">Verde</button>
-                <button class="color-btn yellow" data-color="AMARELO">Amarelo</button>
+            <div class="color-grid" id="colorGrid">
+                <!-- Botões serão gerados dinamicamente -->
             </div>
 
             <div id="gameFeedback" class="game-feedback info">
-                Clique na cor escrita pela palavra.
+                Use os símbolos para identificar a cor correta
             </div>
 
             <div class="game-bottom-hint">
-                Dica para o relatório: botões em grade 2×2 com posições fixas e feedback imediato.
+                Dica: Vermelho=🔺, Azul=●, Verde=■, Amarelo=★
             </div>
         </div>
     </section>
@@ -609,7 +820,7 @@
         </div>
 
         <div class="end-footer">
-            Tela de resultados/feedback pronta para printar no relatório.
+            Jogo acessível desenvolvido para inclusão de pessoas com daltonismo
         </div>
     </section>
 </div>
@@ -624,13 +835,44 @@
         end: document.getElementById('screen-end'),
     };
 
+    // Configurações de cores com símbolos e padrões para daltonismo
     const COLORS = [
-        { name: 'VERMELHO', visualClass: 'red',    cssColor: '#e53935' },
-        { name: 'AZUL',     visualClass: 'blue',   cssColor: '#1e88e5' },
-        { name: 'VERDE',    visualClass: 'green',  cssColor: '#43a047' },
-        { name: 'AMARELO',  visualClass: 'yellow', cssColor: '#f9a825' }
+        { 
+            name: 'VERMELHO', 
+            visualClass: 'red',    
+            cssColor: '#e53935',
+            symbol: '🔺',  // Triângulo
+            patternClass: 'pattern-stripes',
+            borderColor: '#b71c1c'
+        },
+        { 
+            name: 'AZUL',     
+            visualClass: 'blue',   
+            cssColor: '#1e88e5',
+            symbol: '●',    // Círculo
+            patternClass: 'pattern-dots',
+            borderColor: '#0d47a1'
+        },
+        { 
+            name: 'VERDE',    
+            visualClass: 'green',  
+            cssColor: '#43a047',
+            symbol: '■',    // Quadrado
+            patternClass: 'pattern-lines',
+            borderColor: '#1b5e20'
+        },
+        { 
+            name: 'AMARELO',  
+            visualClass: 'yellow', 
+            cssColor: '#f9a825',
+            symbol: '★',    // Estrela
+            patternClass: 'pattern-checker',
+            borderColor: '#f57f17',
+            textColor: '#222'
+        }
     ];
 
+    // Elementos DOM
     const stimulusWordEl = document.getElementById('stimulusWord');
     const scoreValueEl   = document.getElementById('scoreValue');
     const timerValueEl   = document.getElementById('timerValue');
@@ -638,36 +880,151 @@
     const gameFeedbackEl = document.getElementById('gameFeedback');
     const gameAreaEl     = document.getElementById('gameArea');
     const pausedBannerEl = document.getElementById('pausedBanner');
+    const colorGridEl    = document.getElementById('colorGrid');
 
+    // Elementos da tela final
     const finalScoreEl   = document.getElementById('finalScore');
     const statRoundsEl   = document.getElementById('statRounds');
     const statHitsEl     = document.getElementById('statHits');
     const statMissEl     = document.getElementById('statMiss');
     const statAvgTimeEl  = document.getElementById('statAvgTime');
 
-    const colorButtons   = document.querySelectorAll('.color-btn');
-
+    // Botões
     const btnStartGame      = document.getElementById('btnStartGame');
     const btnStartPractice  = document.getElementById('btnStartPractice');
     const btnPause          = document.getElementById('btnPause');
     const btnPlayAgain      = document.getElementById('btnPlayAgain');
     const btnBackHome       = document.getElementById('btnBackHome');
 
+    // Configurações de acessibilidade
+    const toggleSymbols = document.getElementById('toggleSymbols');
+    const togglePatterns = document.getElementById('togglePatterns');
+    const toggleHighContrast = document.getElementById('toggleHighContrast');
+
+    // Estado do jogo
     let score = 0;
-    let baseTime = 30;       // tempo inicial em segundos
+    let baseTime = 30;
     let timeLeft = baseTime;
     let timerId = null;
     let paused = false;
-
-    let currentTargetColor = null; // string: 'VERMELHO', etc
+    let currentTargetColor = null;
     let roundStartTime = null;
-
     let totalRounds = 0;
     let totalHits   = 0;
     let totalMiss   = 0;
-    let totalReactionTime = 0; // soma das reações corretas
+    let totalReactionTime = 0;
+    let difficultyMode = 'normal';
 
-    let difficultyMode = 'normal'; // 'normal' ou 'practice'
+    // Configurações de acessibilidade
+    let showSymbols = true;
+    let showPatterns = false;
+    let highContrast = false;
+
+    // =============================
+    // INICIALIZAÇÃO
+    // =============================
+    function initializeGame() {
+        createColorButtons();
+        setupAccessibilityControls();
+    }
+
+    function createColorButtons() {
+        colorGridEl.innerHTML = '';
+        
+        COLORS.forEach(color => {
+            const button = document.createElement('button');
+            button.className = `color-btn ${color.visualClass}`;
+            button.setAttribute('data-color', color.name);
+            button.setAttribute('aria-label', `Botão ${color.name.toLowerCase()}`);
+            
+            // Conteúdo do botão
+            const symbolSpan = document.createElement('span');
+            symbolSpan.className = 'color-symbol';
+            symbolSpan.textContent = color.symbol;
+            symbolSpan.id = `symbol-${color.name}`;
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'color-name';
+            nameSpan.textContent = color.name;
+            
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'accessibility-icon';
+            iconSpan.textContent = color.symbol;
+            iconSpan.id = `icon-${color.name}`;
+            
+            button.appendChild(symbolSpan);
+            button.appendChild(nameSpan);
+            button.appendChild(iconSpan);
+            
+            // Event listener
+            button.addEventListener('click', () => {
+                const selected = button.getAttribute('data-color');
+                handleColorClick(selected);
+            });
+            
+            colorGridEl.appendChild(button);
+        });
+        
+        updateAccessibilityDisplay();
+    }
+
+    function setupAccessibilityControls() {
+        toggleSymbols.addEventListener('change', () => {
+            showSymbols = toggleSymbols.checked;
+            updateAccessibilityDisplay();
+        });
+        
+        togglePatterns.addEventListener('change', () => {
+            showPatterns = togglePatterns.checked;
+            updateAccessibilityDisplay();
+        });
+        
+        toggleHighContrast.addEventListener('change', () => {
+            highContrast = toggleHighContrast.checked;
+            if (highContrast) {
+                document.body.classList.add('high-contrast');
+            } else {
+                document.body.classList.remove('high-contrast');
+            }
+            updateAccessibilityDisplay();
+        });
+    }
+
+    function updateAccessibilityDisplay() {
+        const buttons = document.querySelectorAll('.color-btn');
+        const symbols = document.querySelectorAll('.color-symbol');
+        const icons = document.querySelectorAll('.accessibility-icon');
+        
+        // Mostrar/ocultar símbolos
+        symbols.forEach(symbol => {
+            symbol.style.display = showSymbols ? 'block' : 'none';
+        });
+        
+        icons.forEach(icon => {
+            icon.style.display = showSymbols ? 'flex' : 'none';
+        });
+        
+        // Aplicar/remover padrões
+        buttons.forEach(button => {
+            const colorName = button.getAttribute('data-color');
+            const colorConfig = COLORS.find(c => c.name === colorName);
+            
+            if (showPatterns && colorConfig) {
+                button.classList.add(colorConfig.patternClass);
+            } else {
+                button.classList.remove('pattern-stripes', 'pattern-dots', 
+                                      'pattern-lines', 'pattern-checker');
+            }
+            
+            // Ajustar borda para alto contraste
+            if (highContrast && colorConfig) {
+                button.style.borderColor = colorConfig.borderColor;
+                button.style.borderWidth = '4px';
+            } else {
+                button.style.borderWidth = '3px';
+            }
+        });
+    }
 
     // =============================
     // FUNÇÕES DE NAVEGAÇÃO DE TELAS
@@ -692,7 +1049,7 @@
 
         scoreValueEl.textContent = '0';
         updateTimerDisplay();
-        setFeedback('Clique na cor escrita pela palavra.', 'info');
+        setFeedback('Use os símbolos para identificar a cor correta', 'info');
         pausedBannerEl.style.display = 'none';
         btnPause.textContent = 'Pausar';
         timerPillEl.classList.remove('timer-warning', 'timer-danger');
@@ -703,6 +1060,7 @@
         resetGameState();
         showScreen('game');
         enableColorButtons(true);
+        updateAccessibilityDisplay();
         startTimer();
         nextRound();
     }
@@ -754,7 +1112,8 @@
     }
 
     function enableColorButtons(enable) {
-        colorButtons.forEach(btn => {
+        const buttons = document.querySelectorAll('.color-btn');
+        buttons.forEach(btn => {
             if (enable) {
                 btn.classList.remove('disabled');
                 btn.disabled = false;
@@ -783,41 +1142,41 @@
             totalHits++;
             score += 10;
 
-            // pequena recompensa de tempo no modo normal, menor no treino
+            // pequena recompensa de tempo
             const bonus = (difficultyMode === 'practice') ? 0.3 : 0.6;
             timeLeft += bonus;
-            timeLeft = Math.min(timeLeft, baseTime + 10); // limite
+            timeLeft = Math.min(timeLeft, baseTime + 10);
 
             totalReactionTime += reactionSeconds;
             scoreValueEl.textContent = score.toString();
             updateTimerDisplay();
 
-            setFeedback('Acertou! Continue.', 'ok');
+            setFeedback('Acertou! Continue assim!', 'ok');
             flashArea(true);
         } else {
             totalMiss++;
-            // perde um pouco de tempo
             const penalty = (difficultyMode === 'practice') ? 1 : 2;
             timeLeft -= penalty;
             if (timeLeft < 0) timeLeft = 0;
             updateTimerDisplay();
 
-            setFeedback('Errou! Foque na palavra, não na cor.', 'error');
+            // Feedback específico para daltonismo
+            const targetColor = COLORS.find(c => c.name === currentTargetColor);
+            setFeedback(`Errou! Procure o símbolo ${targetColor.symbol} para ${targetColor.name.toLowerCase()}.`, 'error');
             flashArea(false);
         }
 
         if (timeLeft <= 0) {
             endGame();
         } else {
-            // pequena pausa lógica se quiser capturar prints da mesma tela
-            setTimeout(nextRound, 250);
+            setTimeout(nextRound, 300);
         }
     }
 
     function flashArea(correct) {
         const cls = correct ? 'flash-correct' : 'flash-wrong';
         gameAreaEl.classList.remove('flash-correct', 'flash-wrong');
-        void gameAreaEl.offsetWidth; // força reflow
+        void gameAreaEl.offsetWidth;
         gameAreaEl.classList.add(cls);
     }
 
@@ -833,9 +1192,9 @@
         } else {
             pausedBannerEl.style.display = 'none';
             btnPause.textContent = 'Pausar';
-            setFeedback('Clique na cor escrita pela palavra.', 'info');
+            setFeedback('Use os símbolos para identificar a cor correta', 'info');
             enableColorButtons(true);
-            roundStartTime = performance.now(); // reinicia contagem da reação
+            roundStartTime = performance.now();
         }
     }
 
@@ -864,20 +1223,13 @@
     // EVENTOS
     // =============================
     btnStartGame.addEventListener('click', () => {
-        baseTime = 30; // modo normal
+        baseTime = 30;
         startGame('normal');
     });
 
     btnStartPractice.addEventListener('click', () => {
-        baseTime = 40; // mais tempo para treino
+        baseTime = 40;
         startGame('practice');
-    });
-
-    colorButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const selected = btn.getAttribute('data-color');
-            handleColorClick(selected);
-        });
     });
 
     btnPause.addEventListener('click', () => {
@@ -893,13 +1245,24 @@
         showScreen('start');
     });
 
-    // Atalho com espaço para alternar pausa (opcional)
+    // Atalho com espaço para alternar pausa
     document.addEventListener('keydown', (ev) => {
         if (SCREENS.game.classList.contains('active') && ev.code === 'Space') {
             ev.preventDefault();
             togglePause();
         }
+        
+        // Atalhos para acessibilidade (opcional)
+        if (ev.ctrlKey && ev.code === 'KeyS') {
+            ev.preventDefault();
+            toggleSymbols.checked = !toggleSymbols.checked;
+            showSymbols = toggleSymbols.checked;
+            updateAccessibilityDisplay();
+        }
     });
+
+    // Inicializar o jogo
+    initializeGame();
 </script>
 </body>
 </html>
